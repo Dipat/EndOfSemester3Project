@@ -2,7 +2,7 @@
   height: 100%;
   padding:0;
   margin:0;
-  background-color: #71271c;
+  background-color: #000000;
 }
 body {
   position: absolute;
@@ -12,11 +12,11 @@ body {
   margin:0;
   height: 100%;
   width:100%;
-  background: #71271c; /* Old browsers */
-  background: -moz-linear-gradient(-45deg,  #71271c 0%, #7c362e 47%, #a53829 100%); /* FF3.6-15 */
-  background: -webkit-linear-gradient(-45deg,  #71271c 0%,#7c362e 47%,#a53829 100%); /* Chrome10-25,Safari5.1-6 */
-  background: linear-gradient(135deg,  #71271c 0%,#7c362e 47%,#a53829 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#71271c', endColorstr='#a53829',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+  /* background: #ffffff; /* Old browsers !1! */
+  /* /* background: -moz-linear-gradient(-45deg,  #71271c 0%, #7c362e 47%, #a53829 100%); /* FF3.6-15 !2! !1! */
+  /* /* background: -webkit-linear-gradient(-45deg,  #71271c 0%,#7c362e 47%,#a53829 100%); /* Chrome10-25,Safari5.1-6 !2! !1! */
+  /* /* background: linear-gradient(135deg,  #ffffff 0%,#7c362e 47%,#a53829 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ !2! !1! */
+  /* filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#71271c', endColorstr='#a53829',GradientType=1 ); /* IE6-9 fallback on horizontal gradient !1! */
   font-family: 'Oswald', 'Source Sans Pro', sans-serif;;
 }
 
