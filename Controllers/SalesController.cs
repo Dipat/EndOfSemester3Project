@@ -58,11 +58,10 @@ namespace EndOfSemester3.Controllers
         }
 
         // CREATE: api/Sales (Take a look at this!)
-        public void Create(string usersId, int productsId, string description, int currentPrice, int bidHours)
+        public void Create(string usersId, int productsId, string description, int currentPrice, DateTime endTime)
         {
-            TimeSpan timeRemaining = new TimeSpan(bidHours, 0, 0);
-            string sql = "INSERT INTO Sales (Users_id, Products_id, Description, CurrentPrice, TimeRemaining, IsActive)" +
-                " VALUES (@users_id, @products_id, @description, @currentPrice, @timeRemaining, @isActive)";
+            string sql = "INSERT INTO Sales (Users_id, Products_id, Description, CurrentPrice, EndTime, IsActive)" +
+                " VALUES (@users_id, @products_id, @description, @currentPrice, @endTime, @isActive)";
             if (description == null || description == "")
             {
                 description = "No description written.";
@@ -76,76 +75,95 @@ namespace EndOfSemester3.Controllers
                     products_id = productsId,
                     description = description,
                     currentPrice = _productsController.Get(productsId).StartingPrice,
-                    timeRemaining = timeRemaining,
+                    endTime = endTime,
                     isActive = true
                 });
             }
         }
 
         //Bidding function(updates current price by bid Amount, and also sets user as highest bidder)
-        public void Bid(int salesId, string usersId, int bidValue)
+        public bool Bid(int salesId, string usersId, int bidValue)
         {//Maybe: failed to place bid return bool
-            if (Get(salesId).HighestBidderId != usersId)
+            //Continue from here. Random syntax error
+            var sale = Get(salesId);
+            bool success = false;
+            if (sale.HighestBidder_id != usersId && sale.Users_id != usersId)
             {
-                string sql = "UPDATE Sales(CurrentPrice, HighestBidder_id)" +
-               "VALUES(@price, @highestBidder_id)" +
-               "WHERE id ='" + salesId + "'";
+                string sql = "UPDATE Sales" +
+                " SET CurrentPrice = @price, HighestBidder_id = @highestBidder_id" +
+                " WHERE Id = @salesID;";
                 string connStr = ConfigurationManager.ConnectionStrings["ConnStr"].ConnectionString;
                 using (var connection = new SqlConnection(connStr))
                 {
                     connection.Query(sql, new
                     {
                         price = (Get(salesId).CurrentPrice + bidValue),
-                        highestBidder_id = usersId
+                        highestBidder_id = usersId,
+                        salesID = salesId
                     });
                 }
+                success = true;
             }
+            return success;
         }
 
-
+        //
+        public void SetInactive(int salesId)
+        {
+            string sql = "UPDATE Sales" +
+            " SET IsActive = @isActive WHERE Id = @salesID;";
+            string connStr = ConfigurationManager.ConnectionStrings["ConnStr"].ConnectionString;
+            using (var connection = new SqlConnection(connStr))
+            {
+                connection.Query(sql, new
+                {
+                    isActive = false,
+                    salesID = salesId
+                });
+            }
+        }
 
         //Search for Sales that have a specific string snippet in their Product's name
         public IEnumerable<Sales> FindSaleByProductName(string name)
         {
-            var sales = GetActive();
+            var sales = GetActive().ToList();
+            List<Sales> sorted = new List<Sales>();
             for (int i = 0; i < sales.Count(); i++)
             {
-                if (!_productsController.Get(sales.ElementAt(i).ProductsId).Name.Contains(name))
+                if (_productsController.Get(sales.ElementAt(i).Products_id).Name.Contains(name))
                 {//if this search doesnt work properly, then the remove is the problem
-                    sales.ToList().RemoveAt(i);
+                    sorted.Add(sales.ElementAt(i));
                 }
             }
-            return sales;
+            return sorted;
         }
 
         //Sort sales based on price(descending/ascending)
         public IEnumerable<Sales> SortSales(string sortBy)
         {
             var sales = GetActive();
+            List<Sales> sorted = new List<Sales>();
             if (sortBy == "ascending")
             {
-                sales.OrderBy(sale => sale.CurrentPrice);
+                sorted = sales.OrderBy(sale => sale.CurrentPrice).ToList();
             }
             else if (sortBy == "descending")
             {
-                sales.OrderByDescending(sale => sale.CurrentPrice);
+                sorted = sales.OrderByDescending(sale => sale.CurrentPrice).ToList();
             }   
             else
             {//if this sorting doesnt work properly, then the remove is the problem
                 var productTypes = _productTypesController.Get();
                 for (int i = 0; i < sales.Count(); i++)
                 {
-                    for (int j = 0; j < productTypes.Count(); j++)
+                    if (_productTypesController.Get(_productsController.Get
+                        (sales.ElementAt(i).Products_id).ProductTypes_id).Type == sortBy)
                     {
-                        if (_productTypesController.Get(_productsController.Get
-                            (sales.ElementAt(i).ProductsId).ProductTypesId).Type != sortBy)
-                        {
-                            sales.ToList().RemoveAt(i);
-                        }
+                        sorted.Add(sales.ElementAt(i));
                     }
                 }
             }
-            return sales;
+            return sorted;
         }
 
         // DELETE: api/Sales/5

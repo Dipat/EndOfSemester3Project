@@ -47,6 +47,7 @@ namespace EndOfSemester3.Controllers
         {
             //Error msg, please beware (null return at product)
             string sql = "INSERT INTO Products (Name, StartingPrice, Location, ProductTypes_id)" +
+                "OUTPUT INSERTED.id" +
                 " VALUES (@name, @startingPrice, @location, @productTypes_id)";
             if ((name != null && name != "") && (startingPrice >= 0) &&
                 (location != null && location != "") && (productTypes_id != 0))

@@ -11,7 +11,7 @@ namespace EndOfSemester3.Models
 		public string Name { get; set; }
 		public int StartingPrice { get; set; }
 		public string Location { get; set; }
-		public int ProductTypesId { get; set; }
+		public int ProductTypes_id { get; set; }
 
 		public Products()
 		{
@@ -23,7 +23,7 @@ namespace EndOfSemester3.Models
 			this.Name = name;
 			this.StartingPrice = startingPrice;
 			this.Location = location;
-			this.ProductTypesId = productTypesId;
+			this.ProductTypes_id = productTypesId;
 		}
 
 		

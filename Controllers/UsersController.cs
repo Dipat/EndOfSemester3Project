@@ -85,9 +85,9 @@ namespace EndOfSemester3.Controllers
         public void Update(string userName, string password, string name, string email, string address)
         {
             EncryptionController encryptionController = new EncryptionController();
-            string sql = "UPDATE Users(Password, Name, Email, Address, Rating, NumberOfSales, IsAdmin, SALT)" +
-                "VALUES(@username, @password, @name, @email, @address, @rating, @numberOfSales, @isAdmin, @SALT)" +
-                "WHERE Username ='" + userName + "'";
+            string sql = "UPDATE Users" +
+                " SET Password = @password, Name = @name, Email = @email, Address = @address, Rating = @rating, NumberOfSales = @numberOfSales, IsAdmin = @isAdmin, SALT = @SALT" +
+                " WHERE Username = @userName";
             //Current User Data
             var user = Get(userName);
             string salt = user.Salt;
@@ -114,6 +114,7 @@ namespace EndOfSemester3.Controllers
             {
                 connection.Query(sql, new
                 {
+                    userName = userName,
                     password = hashedPassword,
                     name = name,
                     email = email,
