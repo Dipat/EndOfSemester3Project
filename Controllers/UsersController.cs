@@ -82,9 +82,10 @@ namespace EndOfSemester3.Controllers
         
 
         // UPDATE: api/Users
-        public void Update(string userName, string password, string name, string email, string address)
+        public bool Update(string userName, string password, string name, string email, string address)
         {
             EncryptionController encryptionController = new EncryptionController();
+            bool result = false;
             string sql = "UPDATE Users" +
                 " SET Password = @password, Name = @name, Email = @email, Address = @address, Rating = @rating, NumberOfSales = @numberOfSales, IsAdmin = @isAdmin, SALT = @SALT" +
                 " WHERE Username = @userName";
@@ -124,14 +125,15 @@ namespace EndOfSemester3.Controllers
                     isAdmin = user.IsAdmin,
                     SALT = salt
                 });
-
+                result = true;
             }
+            return result;
         }
 
         // DELETE: api/Users/5
         public void Delete(string username)
         {
-            string sql = "DELETE * FROM Users WHERE Username = @username;";
+            string sql = "DELETE FROM Users WHERE Username = @username;";
             string connStr = ConfigurationManager.ConnectionStrings["ConnStr"].ConnectionString;
 
             using (var connection = new SqlConnection(connStr))

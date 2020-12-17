@@ -58,8 +58,9 @@ namespace EndOfSemester3.Controllers
         }
 
         // CREATE: api/Sales (Take a look at this!)
-        public void Create(string usersId, int productsId, string description, int currentPrice, DateTime endTime)
+        public bool Create(string usersId, int productsId, string description, int currentPrice, DateTime endTime)
         {
+            bool result = false;
             string sql = "INSERT INTO Sales (Users_id, Products_id, Description, CurrentPrice, EndTime, IsActive)" +
                 " VALUES (@users_id, @products_id, @description, @currentPrice, @endTime, @isActive)";
             if (description == null || description == "")
@@ -78,7 +79,9 @@ namespace EndOfSemester3.Controllers
                     endTime = endTime,
                     isActive = true
                 });
+                result = true;
             }
+            return result;
         }
 
         //Bidding function(updates current price by bid Amount, and also sets user as highest bidder)
@@ -169,7 +172,7 @@ namespace EndOfSemester3.Controllers
         // DELETE: api/Sales/5
         public void Delete(int id)
         {
-            string sql = "DELETE * FROM Sales WHERE Id = @salesID;";
+            string sql = "DELETE FROM Sales WHERE Id = @salesID;";
             string connStr = ConfigurationManager.ConnectionStrings["ConnStr"].ConnectionString;
 
             using (var connection = new SqlConnection(connStr))

@@ -65,7 +65,7 @@ namespace EndOfSemester3.Controllers
         // DELETE: api/ProductTypes/5
         public void Delete(int id)
         {
-            string sql = "DELETE * FROM ProductTypes WHERE Id = @productTypesID;";
+            string sql = "DELETE FROM ProductTypes WHERE Id = @productTypesID;";
             string connStr = ConfigurationManager.ConnectionStrings["ConnStr"].ConnectionString;
 
             using (var connection = new SqlConnection(connStr))
