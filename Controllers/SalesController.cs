@@ -87,7 +87,7 @@ namespace EndOfSemester3.Controllers
             //Continue from here. Random syntax error
             var sale = Get(salesId);
             bool success = false;
-            if (sale.HighestBidder_id != usersId && sale.Users_id != usersId)
+            if (sale.HighestBidder_id != usersId && sale.Users_id != usersId && sale.IsActive)
             {
                 string sql = "UPDATE Sales" +
                 " SET CurrentPrice = @price, HighestBidder_id = @highestBidder_id" +
