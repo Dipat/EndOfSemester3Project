@@ -130,6 +130,28 @@ namespace EndOfSemester3.Controllers
             return result;
         }
 
+        // UPDATE NUMBEROFSALES: api/Users
+        public bool UpdateNumberOfSales(string userName, int numberOfSales)
+        {
+            EncryptionController encryptionController = new EncryptionController();
+            bool result = false;
+            string sql = "UPDATE Users" +
+                " SET NumberOfSales = @numberOfSales" +
+                " WHERE Username = @userName";
+            string connStr = ConfigurationManager.ConnectionStrings["ConnStr"].ConnectionString;
+
+            using (var connection = new SqlConnection(connStr))
+            {
+                connection.Query(sql, new
+                {
+                    userName = userName,
+                    numberOfSales = numberOfSales
+                });
+                result = true;
+            }
+            return result;
+        }
+
         // DELETE: api/Users/5
         public void Delete(string username)
         {
